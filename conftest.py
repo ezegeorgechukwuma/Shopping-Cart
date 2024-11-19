@@ -1,5 +1,7 @@
 import pytest
 import logging
+
+# import pytest_html
 from selenium import webdriver
 
 @pytest.fixture(scope="function")
@@ -13,9 +15,13 @@ def driver():
 @pytest.fixture(scope="function", autouse=True)
 def setup_logging():
     logging.basicConfig(
-        filename="test_log.log",
-        filemode="a",
+        level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(message)s",
-        level=logging.INFO
+        handlers=[
+            logging.StreamHandler(),  # Log to console
+            logging.FileHandler("test_log.log", mode="w"),  # Log to file
+        ],
     )
-    yield
+    logger = logging.getLogger()  # Root logger
+    logger.setLevel(logging.INFO)
+    logging.info("Logging setup is complete")
